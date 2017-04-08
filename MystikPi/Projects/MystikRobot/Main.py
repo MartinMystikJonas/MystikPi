@@ -14,10 +14,9 @@ network = Network(networkPort)
 display = RgbDisplay()
 
 # init
-setRGB(255,0,0)
-setText("Loading...\n"+network.getIpAddress())
+display.warning("Loading...\n"+network.getIpAddress())
 
-time.sleep(100)
+time.sleep(3)
 
 while True:
   print("Waiting for connection")
