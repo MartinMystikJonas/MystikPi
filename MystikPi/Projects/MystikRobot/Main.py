@@ -14,27 +14,27 @@ network = Network(networkPort)
 display = RgbDisplay()
 
 # init
-display.warning("Loading...\n"+network.getIpAddress())
+display.warning("Loading...\n"+network.getIpAddress()+":"+networkPort)
 
 time.sleep(3)
 
 while True:
   print("Waiting for connection")
-  display.info("Waiting for connection\n"+network.getIpAddress())
+  display.info("Ready\n"+network.getIpAddress()+":"+networkPort)
   network.waitForConnection()
   print("Connected")
-  display.success("Connected\n"+network.getIpAddress())
+  display.success("Connected\n"+network.getIpAddress()+":"+networkPort)
   while True:
     try:
       command = network.read();
       if(command != None):
         print("Received '" + command + "'")
         network.write("Received '" + command + "'");
-        display.success(message+"\n"+network.getIpAddress())
+        display.success(command+"\n"+network.getIpAddress()+":"+networkPort)
       else:
         time.sleep(1)
         print(".")
     except IOError:
       print("Connection lost")
-      display.warning("Connected\n"+network.getIpAddress())
+      display.warning("Connection lost\n"+network.getIpAddress()+":"+networkPort)
       break
