@@ -2,8 +2,7 @@ import sys
 sys.path.insert(0,'../../Library')
 
 import time
-#from grovepi import *
-#from GroveRgbDisplay import *
+from grovepi import *
 from Network import *
 
 # settings
