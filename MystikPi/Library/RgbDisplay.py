@@ -9,38 +9,38 @@ class RgbDisplay:
   def __init__(self):
     if sys.platform == 'uwp':
       import winrt_smbus as smbus
-      bus = smbus.SMBus(1)
+      self.bus = smbus.SMBus(1)
     else:
       import smbus
       import RPi.GPIO as GPIO
       rev = GPIO.RPI_REVISION
       if rev == 2 or rev == 3:
-        bus = smbus.SMBus(1)
+        self.bus = smbus.SMBus(1)
       else:
-        bus = smbus.SMBus(0)
+        self.bus = smbus.SMBus(0)
 
   # set backlight to (R,G,B) (values from 0..255 for each)
   def setRGB(r,g,b):
-    bus.write_byte_data(DISPLAY_RGB_ADDR,0,0)
-    bus.write_byte_data(DISPLAY_RGB_ADDR,1,0)
-    bus.write_byte_data(DISPLAY_RGB_ADDR,0x08,0xaa)
-    bus.write_byte_data(DISPLAY_RGB_ADDR,4,r)
-    bus.write_byte_data(DISPLAY_RGB_ADDR,3,g)
-    bus.write_byte_data(DISPLAY_RGB_ADDR,2,b)
+    self.bus.write_byte_data(DISPLAY_RGB_ADDR,0,0)
+    self.bus.write_byte_data(DISPLAY_RGB_ADDR,1,0)
+    self.bus.write_byte_data(DISPLAY_RGB_ADDR,0x08,0xaa)
+    self.bus.write_byte_data(DISPLAY_RGB_ADDR,4,r)
+    self.bus.write_byte_data(DISPLAY_RGB_ADDR,3,g)
+    self.bus.write_byte_data(DISPLAY_RGB_ADDR,2,b)
 
   # send command to display (no need for external use)
   def textCommand(cmd):
-      bus.write_byte_data(DISPLAY_TEXT_ADDR,0x80,cmd)
+      self.bus.write_byte_data(DISPLAY_TEXT_ADDR,0x80,cmd)
 
   # set display text \n for second line(or auto wrap)
   def setText(text, refresh = True):
     if refresh:
-      textCommand(0x01) # clear display
+      self.textCommand(0x01) # clear display
     else:
-      textCommand(0x02) # return home
+      self.textCommand(0x02) # return home
     time.sleep(.05)
-    textCommand(0x08 | 0x04) # display on, no cursor
-    textCommand(0x28) # 2 lines
+    self.textCommand(0x08 | 0x04) # display on, no cursor
+    self.textCommand(0x28) # 2 lines
     time.sleep(.05)
     count = 0
     row = 0
@@ -50,27 +50,27 @@ class RgbDisplay:
         row += 1
         if row == 2:
             break
-        textCommand(0xc0)
+        self.textCommand(0xc0)
         if c == '\n':
             continue
       count += 1
-      bus.write_byte_data(DISPLAY_TEXT_ADDR,0x40,ord(c))
+      self.bus.write_byte_data(DISPLAY_TEXT_ADDR,0x40,ord(c))
 
   def success(self, text):
-    setRGB(0,255,0)
-    setText(text)
+    self.setRGB(0,255,0)
+    self.setText(text)
 
   def error(self, text):
-    setRGB(0,255,0)
-    setText(text)
+    self.setRGB(0,255,0)
+    self.setText(text)
 
   def warning(self, text):
-    setRGB(255,165,0)
-    setText(text)
+    self.setRGB(255,165,0)
+    self.setText(text)
 
   def info(self, text):
-    setRGB(0,0,255)
-    setText(text)
+    self.setRGB(0,0,255)
+    self.setText(text)
 
 if __name__=="__main__":
     display = RgbDisplay()
