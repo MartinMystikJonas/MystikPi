@@ -4,6 +4,7 @@ sys.path.insert(0,'../../Library')
 import time
 from grovepi import *
 from Network import *
+from RgbDisplay import *
 
 # settings
 networkPort = 12346
