@@ -2,6 +2,9 @@ import socket
 import errno
 import time
 
+class ConnectionLost(Exception):
+    pass
+
 class Network(object):
   port = 0
   serversocket = None
@@ -35,7 +38,7 @@ class Network(object):
      messageRaw = self.clientsocket.recv(1024)
      if (not messageRaw) or (messageRaw[0] == 255):
        print ("[Network] " + str(self.address) + " Connection lost")
-       raise IOError("Connection lost")
+       raise ConnectionLost("Connection lost")
      message = messageRaw.decode().rstrip()
      print ("[Network] " + str(self.address) + " <<< " + message)
      return message
@@ -67,6 +70,6 @@ if __name__=="__main__":
         else:
           time.sleep(1)
           print(".")
-      except IOError:
+      except ConnectionLost:
         print("Connection lost")
         break
