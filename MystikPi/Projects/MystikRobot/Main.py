@@ -35,26 +35,28 @@ display.info("Ready on "+str(networkPort)+"\n"+network.getIpAddress()+":"+str(ne
 
 while True:
 
-  network.waitForConnection()
-  print("Connected")
-  display.success("Connected\n"+network.getIpAddress())
+  try:
 
-  while True:
-    try:
-      command = network.read();
-      if(command != None):
-        print("Received '" + command + "'")
-        network.write(command);
-        display.success(command+"\n"+network.getIpAddress())
-        executeCommand(command)
-      else:
-        time.sleep(0.1)
-    except ConnectionLost:
-      print("Connection lost")
-      display.warning("Connection lost\n"+network.getIpAddress())
-      break
-    except:
-      print("Unexpected error " + traceback.format_exc());
+    network.waitForConnection()
+    print("Connected")
+    display.success("Connected\n"+network.getIpAddress())
+
+    while True:
+      try:
+        command = network.read();
+        if(command != None):
+          print("Received '" + command + "'")
+          network.write(command);
+          display.success(command+"\n"+network.getIpAddress())
+          executeCommand(command)
+        else:
+          time.sleep(0.1)
+      except ConnectionLost:
+        print("Connection lost")
+        display.warning("Connection lost\n"+network.getIpAddress())
+        break
+      except:
+        print("Unexpected error " + traceback.format_exc());
 
   except KeyboardInterrupt:
     break
